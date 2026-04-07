@@ -4,7 +4,7 @@ import sys
 
 def tokenization(Reviews):
     tokens = re.split(r'[ \s\t\d\(\)\[\]\{\}\.\!\?\,\;\+\=\-\_\"\'\~\#\@\&\*\%\€\$\ß\\\/ ]', Reviews)
-    return [t for t in tokens if t]
+    return [t.lower() for t in tokens if t]
 
 
 def main():
