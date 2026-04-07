@@ -1,6 +1,7 @@
 Data Intensive Computing Exercise 1
 
-To make changes
+## To make changes
+
 1. Clone the repository with
 
 git clone "insert ssh or https address"
@@ -13,7 +14,7 @@ git commit -m "your commit message"
 
 git push
 
-2. To run the program 
+## To run the program 
 
 To run the program you need to point to the paths where you downloaded the reviews_devset json and the stopwords.txt. 
 
