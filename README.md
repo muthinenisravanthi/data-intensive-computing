@@ -8,7 +8,7 @@ git clone "insert ssh or https address"
 
 2. Make changes, then add and commit with
 
-git add <insert filepath>
+git add "insert_file"
 
 git commit -m "your commit message"
 
@@ -18,7 +18,7 @@ git push
 
 To run the program you need to point to the paths where you downloaded the reviews_devset json and the stopwords.txt. 
 
-python3 preprocessing.py <path/to/review/file> <paht/to/stopwords>
+python3 preprocessing.py path/to/reviews_devset.json path_to_stopwords.txt
 
 Example
 
