@@ -1,26 +1,29 @@
-# Data Intensive Computing Exercise 1
+## Requirements
 
-## To make changes
+- **Python** 3.12
+- Dependencies listed in `requirements.txt`
 
-1. Clone the repository with
+Install dependencies with:
+```bash
+pip install -r requirements.txt
+```
 
-git clone "insert ssh or https address"
+<details>
+<summary>Recommended Setup</summary>
 
-2. Make changes, then add and commit with
+```bash
+python3.12 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
 
-git add "insert_file"
+</details>
 
-git commit -m "your commit message"
+## Unit Testing
 
-git push
+Make sure your code works before pushing
 
-## To run the program 
-
-To run the program you need to point to the paths where you downloaded the reviews_devset json and the stopwords.txt. 
-
-python3 preprocessing.py path/to/reviews_devset.json path_to_stopwords.txt
-
-Example
-
-python3 preprocessing.py Assignment_1_Assets/reviews_devset.json Assignment_1_Assets/stopwords.txt
-
+Example of individual tests
+```bash
+python -m unittest unittests.test_tokenize
+```
