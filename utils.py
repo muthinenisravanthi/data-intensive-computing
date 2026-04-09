@@ -1,12 +1,8 @@
 import re
 import sys
-
-def read_stopwords(path):
-    with open(path, "r", encoding="utf-8") as f:
-        return {line.strip().lower() for line in f if line.strip()}
     
 def tokenize(text, stopwords):
-    TOKEN_RE = re.compile(r"""[\s\d\(\)\[\]\{\}\.\!\?,;:\+=_"'`~#@&\*%€$§\\/]+""")
+    TOKEN_RE = re.compile(r"[^a-zA-Z<>^|]+")
     text = text.lower()
     parts = TOKEN_RE.split(text)
     
