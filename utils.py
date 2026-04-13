@@ -15,10 +15,12 @@ if __name__ == "__main__":
     with open(sentence, "r") as file:
         text = file.read()
     
-    # Second arguement is always the stopwords.txt    
+    # Second arguement is always the stopwords.txt
+    # We store stopwords in a Python set because sets use hash‑based lookup
+    # which is extremely fast, and because they guarantee exact word matching.    
     stopwords = sys.argv[2]
     with open(stopwords, "r") as file:
-        stoptext = file.read()
+        stoptext = set(w.strip().lower() for w in file)
     
     tokens = tokenize(text, stoptext)
     print(tokens[:5])
