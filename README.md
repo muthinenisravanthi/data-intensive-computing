@@ -5,19 +5,10 @@
 
 Install dependencies with:
 ```bash
-pip install -r requirements.txt
-```
-
-<details>
-<summary>Recommended Setup</summary>
-
-```bash
 python3.12 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
-
-</details>
 
 ## Unit Testing
 
