@@ -9,6 +9,13 @@ python3.12 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
+## Run the code
+- Make sure a folder that contains the development datasets exists, called data
+- Example test run:
+```bash
+python src/main.py data/reviews_devset.json --stopwords data/stopwords.txt
+```
+
 
 ## Unit Testing
 
