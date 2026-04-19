@@ -1,4 +1,5 @@
 data
 venv
 .venv
+output.txt
 __pycache__
