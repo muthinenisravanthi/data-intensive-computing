@@ -1,5 +1,5 @@
 import unittest
-# from utils import tokenize
+from utils import tokenize
 
 class TestTokenization(unittest.TestCase):
     

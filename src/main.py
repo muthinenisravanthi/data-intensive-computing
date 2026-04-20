@@ -29,10 +29,7 @@ class MRChiSqr(MRJob):
                 reducer=self.reducer_compute_top_terms
             )
         ]
-
-    # -------------------------------------------------
-    # Mapper
-    # -------------------------------------------------
+        
     def mapper_init(self):
         with open(self.options.stopwords) as f:
             self.stopwords = set(w.strip() for w in f if w.strip())
