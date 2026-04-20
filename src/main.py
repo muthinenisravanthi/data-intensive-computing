@@ -13,12 +13,16 @@ TOP_K = 75
 
 class MRChiSqr(MRJob):
     OUTPUT_PROTOCOL = RawValueProtocol
-
+    
     def configure_args(self):
+        """ Leave the standard MRJOB parameter available and distribute the stopword file to each worker for filtering """
         super().configure_args()
         self.add_file_arg("--stopwords")
 
     def steps(self):
+        """
+        
+        """
         return [
             MRStep(
                 mapper_init=self.mapper_init,
@@ -31,10 +35,22 @@ class MRChiSqr(MRJob):
         ]
         
     def mapper_init(self):
+        """
+        MAPPER SETUP: runs once per worker at the start open stopword and keeps in RAM for optimization 
+        """
         with open(self.options.stopwords) as f:
             self.stopwords = set(w.strip() for w in f if w.strip())
 
     def mapper(self, _, line):
+        """
+        MAPPER WORK: 
+            Preprocess: Strip lines, parse JSON with validation.
+            Validation: Skip records missing a category or empty text.
+            Tokenization: Apply case folding and split text into unique tokens (sets). 
+        Output :
+            - ((token, category), 1): For term-category frequency (Variable A). 
+            - (("__DOCS__", category), 1): For total document counts per category.
+        """
         line = line.strip()
         if not line:
             return
@@ -51,20 +67,27 @@ class MRChiSqr(MRJob):
             return
 
         text = text.lower()
-
+        
+        # tokens are defined as sets so double are counted as one
         tokens = {
             t for t in TOKEN_RE.split(text)
             if len(t) > 1 and t not in self.stopwords
         }
 
-        # term-document frequency per category
+        # Term-document frequency per category using (token, category) as key
+        # Using a set (tokens) ensures we measure Document Frequency, not Term Frequency.
         for token in tokens:
-            yield (token, category), 1
+            yield (token, category), 1 
 
-        # total document count per category
+        # total document count per category using "__DOCS__" as shared string word "Metadata Tag"
         yield ("__DOCS__", category), 1
 
-
+    """
+    REDUCER WORK 1: Intermediate Aggregation
+        Aggregates the '1s' from the Mapper into final counts for each key
+        Transitions to a 'None' key to funnel all data into a single final reducer,
+    output: Word and Doc tokens with none as key, end of parrapelism
+    """
     def reducer_collect_counts(self, key, values):
         token, category = key
         count = sum(values)
@@ -76,6 +99,17 @@ class MRChiSqr(MRJob):
 
 
     def reducer_compute_top_terms(self, _, records):
+        """
+        Final Reducer: Global State Reconstruction
+            iterate to reconstruct the global state in memory using 2 dictionaries category-level metadata and term-category frequencies
+            Builds a nested dictionary structure word_counts[word][category]
+            Computes the total population size N by summing the document counts across all categories.
+        Statistical Analysis & Feature Selection
+            Contingency Table Construction :computes the four quadrants of a contingency table A,B,C,D
+            Chi-Square Metric: calculation of indipendence using the Chi-square statistic
+            Top-K Selection: Utilizing the heapq library, the reducer maintains a Min-Heap of size 75 for each category
+        output: one single, long line
+        """ 
         category_totals = {}
         word_counts = defaultdict(dict)
 
