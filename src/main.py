@@ -27,6 +27,7 @@ class MRChiSqr(MRJob):
             MRStep(
                 mapper_init=self.mapper_init,
                 mapper=self.mapper,
+                mapper_final=self.mapper_final,
                 reducer=self.reducer_collect_counts
             ),
             MRStep(
@@ -37,7 +38,9 @@ class MRChiSqr(MRJob):
     def mapper_init(self):
         """
         MAPPER SETUP: runs once per worker at the start open stopword and keeps in RAM for optimization 
+            Initialize an associative array to hold counts "In-Mapper Combining" logic
         """
+        self.local_counts = defaultdict(int)
         with open(self.options.stopwords) as f:
             self.stopwords = set(w.strip() for w in f if w.strip())
 
@@ -76,11 +79,14 @@ class MRChiSqr(MRJob):
 
         # Term-document frequency per category using (token, category) as key
         # Using a set (tokens) ensures we measure Document Frequency, not Term Frequency.
+        # update the local dictionary
         for token in tokens:
-            yield (token, category), 1 
-
-        # total document count per category using "__DOCS__" as shared string word "Metadata Tag"
-        yield ("__DOCS__", category), 1
+            self.local_counts[(token, category)] += 1
+        self.local_counts[("__DOCS__", category)] += 1
+    
+    def mapper_final(self):
+        for (token, category), count in self.local_counts.items():
+            yield (token, category), count
 
     """
     REDUCER WORK 1: Intermediate Aggregation
