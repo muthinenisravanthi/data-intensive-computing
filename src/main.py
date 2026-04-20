@@ -137,6 +137,8 @@ class MRChiSqr(MRJob):
         # For every word/category pair, compute chi-square
         for word, cat_counts in word_counts.items():
             word_total = sum(cat_counts.values())
+            if word_total < 50:
+                continue
 
             for category, cat_total in category_totals.items():
                 A = cat_counts.get(category, 0)
