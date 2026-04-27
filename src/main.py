@@ -45,7 +45,7 @@ class MRChiSqr(MRJob):
         
     def mapper_init(self):
         """
-        MAPPER SETUP: runs once per worker at the start open stopword and keeps in RAM for optimization 
+        MAPPER SETUP: runs once per worker at the start to open the stopwordlist and keep it in RAM for optimization 
             Initialize a dictionary to hold counts "In-Mapper Combining" logic
         """
         self.local_counts = defaultdict(int)
