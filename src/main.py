@@ -148,12 +148,12 @@ class MRChiSqr(MRJob):
 
         # For every word/category pair, compute chi-square
         for word, cat_counts in word_counts.items():
-            #number of doc containing token
+            # number of doc containing token
             word_total = sum(cat_counts.values()) 
-            #filtering criterion
+            # we skip terms with less than 50 words for efficiency
             if word_total < 50: 
                 continue
-            #contingency table calculation
+            # contingency table calculation
             for category, cat_total in category_totals.items():
                 A = cat_counts.get(category, 0)
                 B = word_total - A
@@ -184,7 +184,7 @@ class MRChiSqr(MRJob):
                 f"{word}:{chi}" for chi, word in terms
             )
             yield None, line
-        #final output line
+        # final output line
         yield None, " ".join(sorted(merged_terms))
 
 
