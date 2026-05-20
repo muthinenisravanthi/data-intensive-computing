@@ -1,4 +1,14 @@
-## Requirements
+# Data-Intensive Computing Project
+
+This project was developed as part of a university team assignment.
+
+**Contributors:**  
+Sravanthi Muthineni
+dylan
+bakogiannis
+Roberto
+-
+- ## Requirements
 
 - **Python** 3.12
 - Dependencies listed in `requirements.txt`
